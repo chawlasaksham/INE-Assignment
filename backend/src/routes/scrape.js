@@ -97,6 +97,12 @@ router.post('/product/:id', async (req, res, next) => {
 
     // Run synchronous or immediate scrape
     const result = await scrapeProduct(product);
+    if (result && !result.success) {
+      return res.status(500).json({
+        error: result.error || 'Scrape execution failed'
+      });
+    }
+
     res.json({
       message: `Scrape finished for ${product.name}`,
       result
