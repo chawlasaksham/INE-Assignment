@@ -1,11 +1,10 @@
 services:
   - type: web
     name: ine-price-tracker-backend
-    env: node
-    rootDir: backend
+    env: docker
+    dockerfilePath: backend/Dockerfile
+    dockerContext: backend
     plan: free
-    buildCommand: npm install && npx playwright install chromium
-    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production

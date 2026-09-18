@@ -160,6 +160,17 @@ async function scrapeProduct(product, options = {}) {
 
   } catch (browserErr) {
     console.error(`[Runner] Browser startup/lifecycle error: ${browserErr.message}`);
+    await db.addScrapeLog({
+      trackedProductId: product.id || null,
+      productId: product.product_id,
+      attemptNumber: 1,
+      status: 'failed',
+      price: null,
+      stock: null,
+      durationMs: 0,
+      errorMessage: `Browser startup error: ${browserErr.message}`
+    }).catch((e) => console.error('[Runner] Failed to log browser error:', e.message));
+
     finalResult = {
       success: false,
       error: browserErr.message
