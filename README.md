@@ -182,24 +182,33 @@ Free-tier cloud backends (e.g. Render) spin down / sleep when idle. To ensure re
 
 ---
 
+---
+
+## Live Deployments & Repository
+
+- **Frontend (Vercel)**: [https://ine-assignment-two.vercel.app](https://ine-assignment-two.vercel.app)
+- **Backend (Render)**: [https://ine-price-tracker-backend.onrender.com](https://ine-price-tracker-backend.onrender.com)
+- **GitHub Repository**: [https://github.com/chawlasaksham/INE-Assignment.git](https://github.com/chawlasaksham/INE-Assignment.git)
+- **Database (Supabase)**: Connected (`https://jfpzxbmrfpideifheqee.supabase.co`)
+
+---
+
 ## Production Deployment Guide
 
 ### Database: Supabase
-1. Create a free Supabase project.
-2. Run [`supabase/schema.sql`](file:///Users/sakshamchawla/Desktop/INE%20Assignment/supabase/schema.sql) in the SQL Editor.
+1. Create a Supabase project.
+2. Run [`supabase/schema.sql`](file:///Users/sakshamchawla/Desktop/INE%20Assignment/supabase/schema.sql) in the SQL Editor to create tables, indexes, and foreign keys.
 
 ### Backend: Render.com
 1. Create a new **Web Service** on Render connected to your GitHub repository.
 2. Configure:
-   - **Root Directory**: `backend`
-   - **Environment**: `Node`
-   - **Build Command**: `npm install && npx playwright install chromium`
-   - **Start Command**: `npm start`
+   - **Environment / Runtime**: `Docker` (uses official `mcr.microsoft.com/playwright:v1.61.1-noble` container with all Chromium dependencies pre-packaged)
+   - **Dockerfile Path**: `backend/Dockerfile` (or `Dockerfile`)
 3. Add Environment Variables:
-   - `SUPABASE_URL`: `<your-supabase-url>`
+   - `SUPABASE_URL`: `https://jfpzxbmrfpideifheqee.supabase.co`
    - `SUPABASE_KEY`: `<your-supabase-key>`
-   - `CRON_SECRET`: `<your-secure-secret-token>`
-   - `PORT`: `10000` (or leave default)
+   - `CRON_SECRET`: `<your-cron-secret-token>`
+   - `PORT`: `10000`
    - `HEADLESS`: `true`
    - `MOCK_STORE_URL`: `https://demo.inelabteamdev.com`
 
@@ -211,7 +220,7 @@ Free-tier cloud backends (e.g. Render) spin down / sleep when idle. To ensure re
    - **Build Command**: `npm run build`
    - **Output Directory**: `dist`
 3. Add Environment Variable:
-   - `VITE_API_BASE_URL`: `https://your-render-backend-url.onrender.com/api`
+   - `VITE_API_BASE_URL`: `https://ine-price-tracker-backend.onrender.com/api`
 
 ---
 
