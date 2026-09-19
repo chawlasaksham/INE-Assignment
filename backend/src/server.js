@@ -21,6 +21,21 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get('/', (req, res) => {
+  res.json({
+    service: 'INE Product Price Tracker Backend API',
+    status: 'online',
+    frontend: 'https://ine-assignment-two.vercel.app',
+    health: '/health',
+    endpoints: {
+      search: '/api/products/search?q=...',
+      trackedProducts: '/api/tracked-products',
+      scrapeLogs: '/api/scrape-logs',
+      scrapeTrigger: '/api/scrape/trigger'
+    }
+  });
+});
+
 app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
