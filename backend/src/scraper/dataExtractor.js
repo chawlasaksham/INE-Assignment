@@ -61,9 +61,9 @@ async function extractFromPage(page) {
       return { success: false, error: 'Price container .price-main not found' };
     }
 
-    const allSpans = Array.from(priceMain.querySelectorAll('span, div, p'));
+    const allSpans = Array.from(priceMain.querySelectorAll('output, span, div, p, strong, em'));
     
-    let realPriceText = '';
+    let rawPriceText = '';
     let maxFontSize = 0;
 
     for (const span of allSpans) {
@@ -81,21 +81,22 @@ async function extractFromPage(page) {
 
       if (/[0-9₹]/.test(text)) {
         const fontSize = parseFloat(style.fontSize) || 0;
-        if (fontSize >= maxFontSize && text.trim().length > 0) {
+        const textLen = text.trim().length;
+        if (fontSize > maxFontSize || (fontSize === maxFontSize && textLen > rawPriceText.length)) {
           maxFontSize = fontSize;
-          realPriceText = text.trim();
+          rawPriceText = text.trim();
         }
       }
     }
 
-    if (!realPriceText) {
+    if (!rawPriceText) {
       for (const span of allSpans) {
         if (!isVisible(span)) continue;
         const style = window.getComputedStyle(span);
         if (style.textDecorationLine.includes('line-through')) continue;
         const text = span.textContent || '';
         if (/[0-9]/.test(text) && !text.includes('%') && !text.includes('Deal price')) {
-          realPriceText = text.trim();
+          rawPriceText = text.trim();
           break;
         }
       }
