@@ -4,7 +4,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { api } from '../services/api';
 
 export default function ProductDetailsModal({ product, isOpen, onClose, onScrapeTriggered }) {
-  const [activeTab, setActiveTab] = useState('history'); // 'history' | 'logs'
+  const [activeTab, setActiveTab] = useState('history');
   const [history, setHistory] = useState([]);
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -51,7 +51,6 @@ export default function ProductDetailsModal({ product, isOpen, onClose, onScrape
 
   if (!isOpen || !product) return null;
 
-  // Chart data formatted
   const chartData = history.map((item) => {
     const d = new Date(item.scraped_at);
     return {
@@ -64,7 +63,6 @@ export default function ProductDetailsModal({ product, isOpen, onClose, onScrape
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="bg-white w-full max-w-4xl rounded-xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
-        {/* Header */}
         <div className="flex items-start justify-between px-6 py-4 border-b border-slate-100 bg-white">
           <div className="min-w-0 pr-4">
             <div className="flex items-center space-x-2">
@@ -109,7 +107,6 @@ export default function ProductDetailsModal({ product, isOpen, onClose, onScrape
           </div>
         </div>
 
-        {/* Current State Summary Bar */}
         <div className="grid grid-cols-3 gap-4 px-6 py-3 bg-slate-50 border-b border-slate-100 text-xs">
           <div>
             <span className="text-slate-500">Current Price:</span>
@@ -131,7 +128,6 @@ export default function ProductDetailsModal({ product, isOpen, onClose, onScrape
           </div>
         </div>
 
-        {/* Tab Selection */}
         <div className="flex border-b border-slate-200 px-6 bg-white">
           <button
             onClick={() => setActiveTab('history')}
@@ -157,7 +153,6 @@ export default function ProductDetailsModal({ product, isOpen, onClose, onScrape
           </button>
         </div>
 
-        {/* Content Area */}
         <div className="flex-1 overflow-y-auto p-6">
           {loading && (
             <div className="flex items-center justify-center py-16 text-slate-400">
@@ -174,7 +169,6 @@ export default function ProductDetailsModal({ product, isOpen, onClose, onScrape
 
           {!loading && activeTab === 'history' && (
             <div className="space-y-6">
-              {/* Chart */}
               {chartData.length > 0 ? (
                 <div className="bg-white p-4 border border-slate-200 rounded-xl shadow-sm">
                   <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-4">
@@ -223,7 +217,6 @@ export default function ProductDetailsModal({ product, isOpen, onClose, onScrape
                 </div>
               )}
 
-              {/* History Table */}
               <div>
                 <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">
                   Historical Observations Table
@@ -345,4 +338,3 @@ export default function ProductDetailsModal({ product, isOpen, onClose, onScrape
     </div>
   );
 }
-

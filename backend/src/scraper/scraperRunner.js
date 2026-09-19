@@ -1,9 +1,3 @@
-/**
- * Scraper Runner
- * Coordinates the full scraping lifecycle: browser management, retries with
- * exponential backoff, extraction, strict validation, and database updates.
- */
-
 const { chromium } = require('playwright');
 const db = require('../db/database');
 const { interactAndRevealPrice } = require('./storeInteraction');
@@ -12,12 +6,6 @@ const { validateScrapedData } = require('./dataValidator');
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-/**
- * Scrapes a single product with retry and backoff logic.
- *
- * @param {Object} product - Tracked product record (must have id, product_id, url)
- * @param {Object} options - { headless: boolean, maxAttempts: number, slowMo: number }
- */
 async function scrapeProduct(product, options = {}) {
   const headless = options.headless !== undefined ? options.headless : (process.env.HEADLESS !== 'false');
   const maxAttempts = options.maxAttempts || 3;
@@ -59,10 +47,8 @@ async function scrapeProduct(product, options = {}) {
         });
         page = await context.newPage();
 
-        // 1. Execute interaction to reveal price
         await interactAndRevealPrice(page, targetUrl, { timeout: 25000 });
 
-        // 2. Extract price and stock from DOM
         const extraction = await extractFromPage(page);
         if (!extraction.success) {
           throw new Error(extraction.error || 'Extraction failed');
@@ -71,7 +57,6 @@ async function scrapeProduct(product, options = {}) {
         const price = sanitizePriceText(extraction.rawPriceText);
         const stock = parseStockText(extraction.rawStockText);
 
-        // 3. Validate extracted values
         const validation = validateScrapedData({ price, stock, currency: 'INR' });
         if (!validation.isValid) {
           throw new Error(`Data validation failed: ${validation.error} (rawPrice: "${extraction.rawPriceText}", rawStock: "${extraction.rawStockText}")`);
@@ -83,7 +68,6 @@ async function scrapeProduct(product, options = {}) {
         console.log(`[Runner] Attempt ${attempt} SUCCEEDED in ${durationMs}ms`);
         console.log(`[Runner] Extracted: Price = ₹${validData.price}, Stock = ${validData.stock}`);
 
-        // 4. Log successful attempt to scrape_logs
         await db.addScrapeLog({
           trackedProductId: product.id || null,
           productId: product.product_id,
@@ -95,7 +79,6 @@ async function scrapeProduct(product, options = {}) {
           errorMessage: null
         });
 
-        // 5. Commit to price_history and update tracked_products
         if (product.id) {
           await db.addPriceHistory({
             trackedProductId: product.id,
@@ -119,7 +102,7 @@ async function scrapeProduct(product, options = {}) {
           stock: validData.stock,
           durationMs
         };
-        break; // Break retry loop on success
+        break;
 
       } catch (err) {
         const durationMs = Date.now() - attemptStart;
@@ -128,7 +111,6 @@ async function scrapeProduct(product, options = {}) {
 
         console.error(`[Runner] Attempt ${attempt} failed (${durationMs}ms): ${err.message}`);
 
-        // Log every attempt honestly
         await db.addScrapeLog({
           trackedProductId: product.id || null,
           productId: product.product_id,
@@ -147,7 +129,6 @@ async function scrapeProduct(product, options = {}) {
             error: err.message
           };
         } else {
-          // Exponential backoff: 1s, 2s, 4s...
           const backoffMs = Math.pow(2, attempt - 1) * 1000;
           console.log(`[Runner] Waiting ${backoffMs}ms before retry...`);
           await sleep(backoffMs);
@@ -182,9 +163,6 @@ async function scrapeProduct(product, options = {}) {
   return finalResult;
 }
 
-/**
- * Scrapes all active tracked products sequentially to conserve memory.
- */
 async function scrapeAllActiveProducts(options = {}) {
   const products = await db.getTrackedProducts();
   const activeProducts = products.filter((p) => p.is_active !== false);
@@ -208,4 +186,3 @@ module.exports = {
   scrapeProduct,
   scrapeAllActiveProducts
 };
-

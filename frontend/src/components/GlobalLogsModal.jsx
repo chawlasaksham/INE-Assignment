@@ -35,7 +35,6 @@ export default function GlobalLogsModal({ isOpen, onClose }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="bg-white w-full max-w-4xl rounded-xl shadow-xl overflow-hidden flex flex-col max-h-[85vh]">
-        {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-white">
           <div>
             <h2 className="text-lg font-bold text-slate-900">System Scrape Audit Logs</h2>
@@ -58,7 +57,6 @@ export default function GlobalLogsModal({ isOpen, onClose }) {
           </div>
         </div>
 
-        {/* Filters */}
         <div className="flex items-center space-x-2 px-6 py-3 bg-slate-50 border-b border-slate-100 text-xs">
           <span className="font-semibold text-slate-500 mr-2">Filter Status:</span>
           {['all', 'success', 'retried', 'failed'].map((st) => (
@@ -76,7 +74,6 @@ export default function GlobalLogsModal({ isOpen, onClose }) {
           ))}
         </div>
 
-        {/* Logs Table */}
         <div className="flex-1 overflow-y-auto p-6">
           {loading ? (
             <div className="flex items-center justify-center py-16 text-slate-400">
@@ -161,4 +158,3 @@ export default function GlobalLogsModal({ isOpen, onClose }) {
     </div>
   );
 }
-

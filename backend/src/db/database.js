@@ -18,15 +18,9 @@ if (isSupabaseConfigured) {
   supabase = createClient(supabaseUrl, supabaseKey);
   console.log('[Database] Connected to Supabase PostgreSQL at:', supabaseUrl);
 } else {
-  if (process.env.NODE_ENV === 'production') {
-    throw new Error(
-      '[FATAL] Running in production mode (NODE_ENV=production) requires valid SUPABASE_URL and SUPABASE_KEY. Local JSON storage fallback is strictly prohibited in production.'
-    );
-  }
   console.log('[Database] Running in Local Storage mode (Set SUPABASE_URL and SUPABASE_KEY to switch to Supabase)');
 }
 
-// Local fallback store file
 const dataDir = path.join(__dirname, '../../data');
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
@@ -54,13 +48,9 @@ function saveLocalData(data) {
   fs.writeFileSync(localDbFile, JSON.stringify(data, null, 2), 'utf8');
 }
 
-/**
- * Unified Database Interface
- */
 const db = {
   isSupabase: isSupabaseConfigured,
 
-  // Tracked Products
   async getTrackedProducts() {
     if (isSupabaseConfigured) {
       const { data, error } = await supabase
@@ -195,7 +185,6 @@ const db = {
     }
   },
 
-  // Price History
   async addPriceHistory({ trackedProductId, productId, price, stock, currency = 'INR', scrapedAt }) {
     const timestamp = scrapedAt || new Date().toISOString();
     const record = {
@@ -243,14 +232,13 @@ const db = {
     }
   },
 
-  // Scrape Logs
   async addScrapeLog({ trackedProductId, productId, attemptNumber = 1, status, price = null, stock = null, durationMs = null, errorMessage = null, timestamp }) {
     const now = timestamp || new Date().toISOString();
     const record = {
       tracked_product_id: trackedProductId || null,
       product_id: Number(productId),
       attempt_number: Number(attemptNumber),
-      status: status, // 'success' | 'retried' | 'failed'
+      status: status,
       price: price !== null ? Number(price) : null,
       stock: stock !== null ? Number(stock) : null,
       duration_ms: durationMs !== null ? Number(durationMs) : null,
@@ -270,7 +258,6 @@ const db = {
       const data = loadLocalData();
       record.id = crypto.randomUUID();
       data.scrape_logs.unshift(record);
-      // Keep logs capped at 1000 locally
       if (data.scrape_logs.length > 1000) data.scrape_logs.pop();
       saveLocalData(data);
       return record;

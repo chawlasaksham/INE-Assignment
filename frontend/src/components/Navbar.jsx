@@ -5,7 +5,6 @@ export default function Navbar({ onOpenSearch, onOpenLogs, onRefresh, isRefreshi
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Brand */}
         <div className="flex items-center space-x-3">
           <div className="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-black text-lg shadow-sm">
             ◧
@@ -25,7 +24,6 @@ export default function Navbar({ onOpenSearch, onOpenLogs, onRefresh, isRefreshi
           </div>
         </div>
 
-        {/* Actions */}
         <div className="flex items-center space-x-2.5">
           <button
             onClick={onOpenLogs}
@@ -56,4 +54,3 @@ export default function Navbar({ onOpenSearch, onOpenLogs, onRefresh, isRefreshi
     </header>
   );
 }
-

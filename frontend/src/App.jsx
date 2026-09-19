@@ -13,7 +13,6 @@ export default function App() {
   const [error, setError] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // Modals state
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isLogsOpen, setIsLogsOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -36,7 +35,6 @@ export default function App() {
   useEffect(() => {
     fetchProducts(true);
 
-    // Auto-poll tracked products every 15s to catch background scrape updates
     const interval = setInterval(() => {
       fetchProducts(false);
     }, 15000);
@@ -68,7 +66,6 @@ export default function App() {
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Page Title & Intro */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
             <h2 className="text-xl font-extrabold text-slate-900">
@@ -90,7 +87,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Error Alert */}
         {error && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-800 text-sm flex items-center justify-between">
             <div className="flex items-center">
@@ -106,7 +102,6 @@ export default function App() {
           </div>
         )}
 
-        {/* Loading State */}
         {loading && (
           <div className="flex flex-col items-center justify-center py-20 text-slate-400">
             <Loader2 className="w-8 h-8 animate-spin mb-3 text-blue-600" />
@@ -114,7 +109,6 @@ export default function App() {
           </div>
         )}
 
-        {/* Empty State */}
         {!loading && products.length === 0 && (
           <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center max-w-lg mx-auto shadow-xs mt-8">
             <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -136,7 +130,6 @@ export default function App() {
           </div>
         )}
 
-        {/* Products Grid */}
         {!loading && products.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {products.map((product) => (
@@ -152,7 +145,6 @@ export default function App() {
         )}
       </main>
 
-      {/* Modals */}
       <SearchModal
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
@@ -176,4 +168,3 @@ export default function App() {
     </div>
   );
 }
-

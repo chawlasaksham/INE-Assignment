@@ -10,11 +10,9 @@ const scrapeRouter = require('./routes/scrape');
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// Middlewares
 app.use(cors());
 app.use(express.json());
 
-// Request logger
 app.use((req, res, next) => {
   const start = Date.now();
   res.on('finish', () => {
@@ -23,7 +21,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Health check endpoint (for Render / keep-alive)
 app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
@@ -32,18 +29,15 @@ app.get('/health', (req, res) => {
   });
 });
 
-// API Routes
 app.use('/api/products', productsRouter);
 app.use('/api/tracked-products', trackedRouter);
 app.use('/api/scrape-logs', logsRouter);
 app.use('/api/scrape', scrapeRouter);
 
-// 404 handler
 app.use((req, res) => {
   res.status(404).json({ error: 'Endpoint not found' });
 });
 
-// Global Error Handler
 app.use((err, req, res, next) => {
   console.error('[Error Handler]', err);
   res.status(err.status || 500).json({
@@ -60,4 +54,3 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 module.exports = app;
-

@@ -13,13 +13,11 @@ async function handleResponse(res) {
 }
 
 export const api = {
-  // Search
   async searchCatalog(query) {
     const res = await fetch(`${API_BASE}/products/search?q=${encodeURIComponent(query || '')}`);
     return handleResponse(res);
   },
 
-  // Tracked Products
   async getTrackedProducts() {
     const res = await fetch(`${API_BASE}/tracked-products`);
     return handleResponse(res);
@@ -48,7 +46,6 @@ export const api = {
     return handleResponse(res);
   },
 
-  // History & Logs
   async getProductHistory(id) {
     const res = await fetch(`${API_BASE}/tracked-products/${id}/history`);
     return handleResponse(res);
@@ -62,7 +59,6 @@ export const api = {
     return handleResponse(res);
   },
 
-  // Manual Scrape
   async triggerProductScrape(id) {
     const res = await fetch(`${API_BASE}/scrape/product/${id}`, {
       method: 'POST'
@@ -80,4 +76,3 @@ export const api = {
     return handleResponse(res);
   }
 };
-

@@ -1,9 +1,3 @@
-/**
- * Data Validator
- * Ensures that prices and stock extracted from the scraper are valid and clean
- * before being committed to Supabase.
- */
-
 function validateScrapedData(data) {
   if (!data || typeof data !== 'object') {
     return { isValid: false, error: 'Scraped data must be a non-null object' };
@@ -11,7 +5,6 @@ function validateScrapedData(data) {
 
   const { price, stock, currency } = data;
 
-  // 1. Price validation
   if (price === null || price === undefined || price === '') {
     return { isValid: false, error: 'Price is missing or empty' };
   }
@@ -25,7 +18,6 @@ function validateScrapedData(data) {
     return { isValid: false, error: `Price must be greater than 0, received: ${numericPrice}` };
   }
 
-  // 2. Stock validation
   if (stock === null || stock === undefined || stock === '') {
     return { isValid: false, error: 'Stock is missing or empty' };
   }
@@ -39,7 +31,6 @@ function validateScrapedData(data) {
     return { isValid: false, error: `Stock cannot be negative, received: ${numericStock}` };
   }
 
-  // 3. Currency validation
   const validCurrency = typeof currency === 'string' && currency.trim() ? currency.trim() : 'INR';
 
   return {
@@ -55,4 +46,3 @@ function validateScrapedData(data) {
 module.exports = {
   validateScrapedData
 };
-

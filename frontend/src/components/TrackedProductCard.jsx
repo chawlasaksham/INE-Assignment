@@ -50,7 +50,6 @@ export default function TrackedProductCard({ product, onSelect, onDeleted, onScr
       className="bg-white border border-slate-200 rounded-xl p-5 hover:border-blue-300 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
     >
       <div>
-        {/* Top Badges */}
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded">
             {product.category || 'General'}
@@ -60,7 +59,6 @@ export default function TrackedProductCard({ product, onSelect, onDeleted, onScr
           </span>
         </div>
 
-        {/* Product Title & Brand */}
         <h3 className="text-base font-bold text-slate-900 mt-2.5 line-clamp-1" title={product.name}>
           {product.name}
         </h3>
@@ -68,7 +66,6 @@ export default function TrackedProductCard({ product, onSelect, onDeleted, onScr
           Brand: <span className="font-semibold text-slate-700">{product.brand}</span>
         </p>
 
-        {/* Current Metrics */}
         <div className="mt-4 pt-3 border-t border-slate-100 flex items-end justify-between">
           <div>
             <span className="text-[11px] uppercase tracking-wider text-slate-400 font-bold block">
@@ -98,7 +95,6 @@ export default function TrackedProductCard({ product, onSelect, onDeleted, onScr
         </div>
       </div>
 
-      {/* Footer Info & Actions */}
       <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
         <div className="flex items-center truncate pr-2" title={product.last_scraped_at ? new Date(product.last_scraped_at).toLocaleString() : 'Never'}>
           <Clock className="w-3.5 h-3.5 mr-1 text-slate-400 flex-shrink-0" />
@@ -139,4 +135,3 @@ export default function TrackedProductCard({ product, onSelect, onDeleted, onScr
     </div>
   );
 }
-

@@ -1,17 +1,9 @@
-/**
- * Catalog Service
- * Uses lightweight HTTP fetching to browse and search products from the INE mock store.
- */
-
 const MOCK_STORE_URL = process.env.MOCK_STORE_URL || 'https://demo.inelabteamdev.com';
 
 let cachedCatalog = null;
 let lastFetchedAt = 0;
-const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
+const CACHE_TTL_MS = 10 * 60 * 1000;
 
-/**
- * Fetches all products across catalog pages using lightweight HTTP.
- */
 async function fetchFullCatalog() {
   const now = Date.now();
   if (cachedCatalog && now - lastFetchedAt < CACHE_TTL_MS) {
@@ -37,7 +29,6 @@ async function fetchFullCatalog() {
       }
       totalPages = data.pages || 1;
       page++;
-      // Guard against infinite loop
       if (page > 50) break;
     }
 
@@ -52,9 +43,6 @@ async function fetchFullCatalog() {
   }
 }
 
-/**
- * Searches products by partial or full query matching name, brand, category, or SKU.
- */
 async function searchProducts(query) {
   const catalog = await fetchFullCatalog();
   if (!query || typeof query !== 'string' || !query.trim()) {
@@ -71,9 +59,6 @@ async function searchProducts(query) {
   });
 }
 
-/**
- * Fetches single product metadata from mock store HTTP API.
- */
 async function getProductById(productId) {
   const url = `${MOCK_STORE_URL}/api/product/${productId}`;
   const res = await fetch(url);
@@ -89,4 +74,3 @@ module.exports = {
   searchProducts,
   getProductById
 };
-

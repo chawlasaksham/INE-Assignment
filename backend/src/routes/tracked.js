@@ -3,10 +3,6 @@ const router = express.Router();
 const db = require('../db/database');
 const { scrapeProduct } = require('../scraper/scraperRunner');
 
-/**
- * GET /api/tracked-products
- * Lists all tracked products with current price, stock, and last scrape time.
- */
 router.get('/', async (req, res, next) => {
   try {
     const products = await db.getTrackedProducts();
@@ -16,11 +12,6 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-/**
- * POST /api/tracked-products
- * Persists product first and returns 201 immediately, then kicks off
- * the initial scrape in the background without blocking the response.
- */
 router.post('/', async (req, res, next) => {
   try {
     const { productId, name, brand, category, sku, url } = req.body;
@@ -29,7 +20,6 @@ router.post('/', async (req, res, next) => {
       return res.status(400).json({ error: 'productId and name are required' });
     }
 
-    // Check if already tracked
     const existing = await db.getTrackedProductByStoreId(productId);
     if (existing) {
       return res.status(409).json({
@@ -38,7 +28,6 @@ router.post('/', async (req, res, next) => {
       });
     }
 
-    // 1. Persist product immediately
     const createdProduct = await db.createTrackedProduct({
       productId,
       name,
@@ -48,13 +37,11 @@ router.post('/', async (req, res, next) => {
       url: url || `https://demo.inelabteamdev.com/product/${productId}`
     });
 
-    // 2. Return 201 response immediately
     res.status(201).json({
       message: 'Product tracked successfully. Initial scrape started in background.',
       product: createdProduct
     });
 
-    // 3. Perform initial scrape asynchronously in background
     setImmediate(async () => {
       try {
         console.log(`[Tracked] Triggering background initial scrape for product ${productId}...`);
@@ -69,10 +56,6 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-/**
- * DELETE /api/tracked-products/:id
- * Removes a tracked product.
- */
 router.delete('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -83,10 +66,6 @@ router.delete('/:id', async (req, res, next) => {
   }
 });
 
-/**
- * GET /api/tracked-products/:id/history
- * Returns chronological price and stock history for a product.
- */
 router.get('/:id/history', async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -98,4 +77,3 @@ router.get('/:id/history', async (req, res, next) => {
 });
 
 module.exports = router;
-

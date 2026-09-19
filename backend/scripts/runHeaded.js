@@ -1,11 +1,5 @@
 #!/usr/bin/env node
 
-/**
- * Headed Scraper Demonstration Script
- * Runs Playwright in headed mode with visible browser automation
- * for evaluation and screen recording (Assignment Requirement #7).
- */
-
 require('dotenv').config();
 const db = require('../src/db/database');
 const { scrapeProduct } = require('../src/scraper/scraperRunner');
@@ -44,7 +38,6 @@ async function main() {
       };
     }
   } else {
-    // Pick the first tracked product or fallback to product 705 (Ironwood Kettle S)
     const trackedList = await db.getTrackedProducts();
     if (trackedList.length > 0) {
       targetProduct = trackedList[0];
@@ -100,4 +93,3 @@ main().catch((err) => {
   console.error('\nFatal Error in Headed Scraper:', err);
   process.exit(1);
 });
-
